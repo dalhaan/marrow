@@ -4,11 +4,12 @@ export const Skeleton = ({
   isLoading,
   maxDepth = Infinity,
   children,
+  ...props
 }: {
   isLoading: boolean;
   maxDepth?: number;
   children: React.ReactNode;
-}) => {
+} & React.HTMLAttributes<HTMLDivElement>) => {
   const container = useRef<HTMLDivElement>(null);
   const [Loader, setLoader] = useState<React.ReactNode>(null);
 
@@ -78,5 +79,9 @@ export const Skeleton = ({
     );
   }, []);
 
-  return <div ref={container}>{isLoading && Loader ? Loader : children}</div>;
+  return (
+    <div ref={container} {...props}>
+      {isLoading && Loader ? Loader : children}
+    </div>
+  );
 };
