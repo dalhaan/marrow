@@ -63,6 +63,34 @@ export const Skeleton = ({
         height={rootBoundingBox.height}
         viewBox={`0 0 ${rootBoundingBox.width} ${rootBoundingBox.height}`}
       >
+        <defs>
+          <linearGradient
+            id="logo-gradient"
+            x1="50%"
+            y1="0%"
+            x2="50%"
+            y2="100%"
+          >
+            <stop offset="0%" stop-color="#7A5FFF">
+              <animate
+                attributeName="stop-color"
+                values="#7A5FFF; #01FF89; #7A5FFF"
+                dur="4s"
+                repeatCount="indefinite"
+              ></animate>
+            </stop>
+
+            <stop offset="100%" stop-color="#01FF89">
+              <animate
+                attributeName="stop-color"
+                values="#01FF89; #7A5FFF; #01FF89"
+                dur="4s"
+                repeatCount="indefinite"
+              ></animate>
+            </stop>
+          </linearGradient>
+        </defs>
+
         {childrenNodes.map((node) => (
           <rect
             x={node.boundingBox.left}
@@ -71,7 +99,7 @@ export const Skeleton = ({
             ry={10}
             width={node.boundingBox.width}
             height={node.boundingBox.height}
-            fill="#ccc"
+            fill="url('#logo-gradient')"
             opacity={0.2}
           />
         ))}

@@ -1,22 +1,20 @@
 {
-  "name": "react-skeleton",
+  "name": "react-marrow",
   "version": "0.1.9",
-  "description": "Cross-Origin Remote Procedure Call",
+  "description": "Skeleton loader for React",
   "keywords": [
     "typescript",
-    "postMessage",
-    "promise",
-    "rpc",
-    "message"
+    "skeleton",
+    "loader"
   ],
-  "homepage": "https://github.com/dalhaan/corpc",
+  "homepage": "https://github.com/dalhaan/marrow",
   "bugs": {
-    "url": "https://github.com/dalhaan/corpc/issues"
+    "url": "https://github.com/dalhaan/marrow/issues"
   },
   "author": "Dallan Freemantle <dallan.npm@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dalhaan/corpc.git"
+    "url": "git+https://github.com/dalhaan/marrow.git"
   },
   "files": [
     "dist"
