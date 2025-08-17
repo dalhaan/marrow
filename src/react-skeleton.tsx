@@ -55,7 +55,30 @@ export const Skeleton = ({
         parent = parent.parentNode;
       }
 
-      if (currentDepth > maxDepth || currentDepth < minDepth) {
+      if (
+        currentDepth > maxDepth ||
+        currentDepth < minDepth ||
+        !(node instanceof HTMLElement)
+      ) {
+        continue;
+      }
+
+      // should render node
+      const nodeStyle = window.getComputedStyle(node);
+      const hasTextContent = Array.from(node.childNodes).some(
+        (child) => child.nodeType === Node.TEXT_NODE,
+      );
+      const hasBackground = nodeStyle.backgroundColor !== "rgba(0, 0, 0, 0)";
+
+      console.log(node, {
+        text: node.innerText,
+        hasTextContent,
+        hasBackground,
+        nodeType: node.nodeType,
+        children: node.childNodes,
+      });
+
+      if (!hasTextContent && !hasBackground) {
         continue;
       }
 
