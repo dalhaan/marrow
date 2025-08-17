@@ -1,5 +1,35 @@
 import React, { useId, useLayoutEffect, useRef, useState } from "react";
 
+type SkeletonProps = {
+  /** Custom class name for the skeleton component */
+  className?: string;
+  /** Whether the skeleton loader is active */
+  isLoading?: boolean;
+  /** Maximum depth of DOM tree to generate skeletons for */
+  maxDepth?: number;
+  /** Minimum depth of DOM tree to generate skeletons for */
+  minDepth?: number;
+  /** Color of the moving gradient in the skeleton */
+  foregroundColor?: string;
+  /** Background color of the skeleton */
+  backgroundColor?: string;
+  /** Whether to animate the skeleton gradient */
+  shouldAnimate?: boolean;
+  /** Content to render when not loading */
+  children: React.ReactNode;
+};
+
+/**
+ * A skeleton loader component that displays placeholder UI while content is loading.
+ * It creates skeleton elements based on the structure of the children components.
+ *
+ * @example
+ * ```jsx
+ * <Skeleton isLoading={isLoading}>
+ *   <div>Content that will be replaced with skeleton loaders</div>
+ * </Skeleton>
+ * ```
+ */
 export const Skeleton = ({
   className,
   isLoading = true,
@@ -9,16 +39,7 @@ export const Skeleton = ({
   backgroundColor = "#CCC",
   shouldAnimate = true,
   children,
-}: {
-  className?: string;
-  isLoading?: boolean;
-  maxDepth?: number;
-  minDepth?: number;
-  foregroundColor?: string;
-  backgroundColor?: string;
-  shouldAnimate?: boolean;
-  children: React.ReactNode;
-}) => {
+}: SkeletonProps) => {
   const container = useRef<HTMLDivElement>(null);
   const [Loader, setLoader] = useState<React.ReactNode>(null);
   const id = useId();
@@ -35,6 +56,7 @@ export const Skeleton = ({
     const childrenNodes: {
       boundingBox: { top: number; left: number; width: number; height: number };
       depth: number;
+      borderRadius: number;
     }[] = [];
 
     const walker = document.createTreeWalker(
@@ -69,12 +91,14 @@ export const Skeleton = ({
         (child) => child.nodeType === Node.TEXT_NODE,
       );
       const hasBackground = nodeStyle.backgroundColor !== "rgba(0, 0, 0, 0)";
+      const borderRadius = nodeStyle.borderRadius;
 
       console.log(node, {
         text: node.innerText,
         hasTextContent,
         hasBackground,
         nodeType: node.nodeType,
+        borderRadius,
         children: node.childNodes,
       });
 
@@ -93,6 +117,7 @@ export const Skeleton = ({
       childrenNodes.push({
         boundingBox: elementBoundingBox,
         depth: currentDepth,
+        borderRadius: Number(borderRadius.replace("px", "")),
       });
     }
 
@@ -111,12 +136,11 @@ export const Skeleton = ({
               <rect
                 x={node.boundingBox.left}
                 y={node.boundingBox.top}
-                rx={15}
-                ry={15}
+                rx={node.borderRadius}
+                ry={node.borderRadius}
                 width={node.boundingBox.width}
                 height={node.boundingBox.height}
                 fill="url('#logo-gradient')"
-                opacity={0.2}
               />
             ))}
 

@@ -1,21 +1,22 @@
-# React Skeleton
+# React Marrow
 
 A lightweight, customizable skeleton loader component for React applications.
 
 ## Installation
 
 ```bash
-npm install marrow
+npm install react-marrow
 # or
-yarn add marrow
+yarn add react-marrow
 # or
-pnpm add marrow
+pnpm add react-marrow
 ```
 
 ## Usage
 
 ```jsx
-import { Skeleton } from "marrow";
+import { Skeleton } from "react-marrow";
+import { useEffect, useState } from "react";
 
 function MyComponent() {
   const [isLoading, setIsLoading] = useState(true);
@@ -38,13 +39,34 @@ function MyComponent() {
 }
 ```
 
+### Advanced usage
+
+```jsx
+<Skeleton
+  className="my-skeleton"
+  isLoading
+  minDepth={0}
+  maxDepth={3}
+  foregroundColor="#BDBDBD"
+  backgroundColor="#E0E0E0"
+  shouldAnimate
+>
+  {children}
+</Skeleton>
+```
+
 ## Props
 
-| Prop        | Type      | Default    | Description                                             |
-| ----------- | --------- | ---------- | ------------------------------------------------------- |
-| `isLoading` | boolean   | -          | When true, renders skeleton loaders instead of children |
-| `maxDepth`  | number    | `Infinity` | Maximum depth of DOM tree to generate skeletons for     |
-| `children`  | ReactNode | -          | Content to render when not loading                      |
+| Prop              | Type           | Default    | Description                                                |
+| ----------------- | -------------- | ---------- | ---------------------------------------------------------- |
+| `className`       | string         | -          | Optional className applied to the internal `<svg>` wrapper |
+| `isLoading`       | boolean        | `true`     | When true, renders skeleton loaders instead of `children`  |
+| `maxDepth`        | number         | `Infinity` | Maximum DOM depth to generate skeletons for                |
+| `minDepth`        | number         | `0`        | Minimum DOM depth to start generating skeletons            |
+| `foregroundColor` | string (color) | `"#AAA"`   | Color of the moving gradient                               |
+| `backgroundColor` | string (color) | `"#CCC"`   | Base color of the skeleton background                      |
+| `shouldAnimate`   | boolean        | `true`     | Toggle the shimmer animation                               |
+| `children`        | ReactNode      | -          | Content to render when not loading                         |
 
 ## Features
 
