@@ -1,5 +1,35 @@
 import React, { useId, useLayoutEffect, useRef, useState } from "react";
 
+type SkeletonProps = {
+  /** Custom class name for the skeleton component */
+  className?: string;
+  /** Whether the skeleton loader is active */
+  isLoading?: boolean;
+  /** Maximum depth of DOM tree to generate skeletons for */
+  maxDepth?: number;
+  /** Minimum depth of DOM tree to generate skeletons for */
+  minDepth?: number;
+  /** Color of the moving gradient in the skeleton */
+  foregroundColor?: string;
+  /** Background color of the skeleton */
+  backgroundColor?: string;
+  /** Whether to animate the skeleton gradient */
+  shouldAnimate?: boolean;
+  /** Content to render when not loading */
+  children: React.ReactNode;
+};
+
+/**
+ * A skeleton loader component that displays placeholder UI while content is loading.
+ * It creates skeleton elements based on the structure of the children components.
+ *
+ * @example
+ * ```jsx
+ * <Skeleton isLoading={isLoading}>
+ *   <div>Content that will be replaced with skeleton loaders</div>
+ * </Skeleton>
+ * ```
+ */
 export const Skeleton = ({
   className,
   isLoading = true,
@@ -9,16 +39,7 @@ export const Skeleton = ({
   backgroundColor = "#CCC",
   shouldAnimate = true,
   children,
-}: {
-  className?: string;
-  isLoading?: boolean;
-  maxDepth?: number;
-  minDepth?: number;
-  foregroundColor?: string;
-  backgroundColor?: string;
-  shouldAnimate?: boolean;
-  children: React.ReactNode;
-}) => {
+}: SkeletonProps) => {
   const container = useRef<HTMLDivElement>(null);
   const [Loader, setLoader] = useState<React.ReactNode>(null);
   const id = useId();
