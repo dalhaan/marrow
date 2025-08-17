@@ -35,6 +35,7 @@ export const Skeleton = ({
     const childrenNodes: {
       boundingBox: { top: number; left: number; width: number; height: number };
       depth: number;
+      borderRadius: number;
     }[] = [];
 
     const walker = document.createTreeWalker(
@@ -69,12 +70,14 @@ export const Skeleton = ({
         (child) => child.nodeType === Node.TEXT_NODE,
       );
       const hasBackground = nodeStyle.backgroundColor !== "rgba(0, 0, 0, 0)";
+      const borderRadius = nodeStyle.borderRadius;
 
       console.log(node, {
         text: node.innerText,
         hasTextContent,
         hasBackground,
         nodeType: node.nodeType,
+        borderRadius,
         children: node.childNodes,
       });
 
@@ -93,6 +96,7 @@ export const Skeleton = ({
       childrenNodes.push({
         boundingBox: elementBoundingBox,
         depth: currentDepth,
+        borderRadius: Number(borderRadius.replace("px", "")),
       });
     }
 
@@ -111,12 +115,11 @@ export const Skeleton = ({
               <rect
                 x={node.boundingBox.left}
                 y={node.boundingBox.top}
-                rx={15}
-                ry={15}
+                rx={node.borderRadius}
+                ry={node.borderRadius}
                 width={node.boundingBox.width}
                 height={node.boundingBox.height}
                 fill="url('#logo-gradient')"
-                opacity={0.2}
               />
             ))}
 
