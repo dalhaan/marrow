@@ -1,19 +1,33 @@
-import React, { useLayoutEffect, useRef, useState } from "react";
+import React, { useId, useLayoutEffect, useRef, useState } from "react";
 
 export const Skeleton = ({
+  className,
   isLoading = true,
   maxDepth = Infinity,
   minDepth = 0,
+  foregroundColor = "#AAA",
+  backgroundColor = "#CCC",
+  shouldAnimate = true,
   children,
-  ...props
 }: {
+  className?: string;
   isLoading?: boolean;
   maxDepth?: number;
   minDepth?: number;
+  foregroundColor?: string;
+  backgroundColor?: string;
+  shouldAnimate?: boolean;
   children: React.ReactNode;
-} & React.HTMLAttributes<HTMLDivElement>) => {
+}) => {
   const container = useRef<HTMLDivElement>(null);
   const [Loader, setLoader] = useState<React.ReactNode>(null);
+  const id = useId();
+  const clipId = `clip-${id}`;
+  const gradientId = `gradient-${id}`;
+  const gradientRatio = 2;
+  const from = `${gradientRatio * -1} 0`;
+  const to = `${gradientRatio} 0`;
+  const duration = `${1.2}s`;
 
   useLayoutEffect(() => {
     const rootBoundingBox = container.current!.getBoundingClientRect();
@@ -61,57 +75,62 @@ export const Skeleton = ({
 
     setLoader(
       <svg
+        className={className}
         width={rootBoundingBox.width}
         height={rootBoundingBox.height}
         viewBox={`0 0 ${rootBoundingBox.width} ${rootBoundingBox.height}`}
+        preserveAspectRatio="none"
+        xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          <linearGradient
-            id="logo-gradient"
-            x1="0%"
-            y1="0%"
-            x2="100%"
-            y2="100%"
-          >
-            <stop offset="0%" stop-color="#7A5FFF">
-              <animate
-                attributeName="stop-color"
-                values="#7A5FFF; #01FF89; #7A5FFF"
-                dur="2s"
-                repeatCount="indefinite"
-              ></animate>
-            </stop>
+          <clipPath id={clipId}>
+            {childrenNodes.map((node) => (
+              <rect
+                x={node.boundingBox.left}
+                y={node.boundingBox.top}
+                rx={15}
+                ry={15}
+                width={node.boundingBox.width}
+                height={node.boundingBox.height}
+                fill="url('#logo-gradient')"
+                opacity={0.2}
+              />
+            ))}
 
-            <stop offset="100%" stop-color="#01FF89">
-              <animate
-                attributeName="stop-color"
-                values="#01FF89; #7A5FFF; #01FF89"
-                dur="4s"
-                repeatCount="indefinite"
-              ></animate>
-            </stop>
-          </linearGradient>
+            <linearGradient
+              id={gradientId}
+              gradientTransform={`translate(${from})`}
+            >
+              <stop offset="0%" stopColor={backgroundColor} stopOpacity={1} />
+
+              <stop offset="50%" stopColor={foregroundColor} stopOpacity={1} />
+
+              <stop offset="100%" stopColor={backgroundColor} stopOpacity={1} />
+
+              {shouldAnimate && (
+                <animateTransform
+                  attributeName="gradientTransform"
+                  type="translate"
+                  values={`${from}; 0 0; ${to}`}
+                  dur={duration}
+                  repeatCount="indefinite"
+                />
+              )}
+            </linearGradient>
+          </clipPath>
         </defs>
-
-        {childrenNodes.map((node) => (
-          <rect
-            x={node.boundingBox.left}
-            y={node.boundingBox.top}
-            rx={15}
-            ry={15}
-            width={node.boundingBox.width}
-            height={node.boundingBox.height}
-            fill="url('#logo-gradient')"
-            opacity={0.2}
-          />
-        ))}
+        <rect
+          role="presentation"
+          x="0"
+          y="0"
+          width="100%"
+          height="100%"
+          clipPath={`url(#${clipId})`}
+          style={{ fill: `url(#${gradientId})` }}
+        />
       </svg>,
     );
   }, []);
 
-  return (
-    <div ref={container} {...props}>
-      {isLoading && Loader ? Loader : children}
-    </div>
-  );
+  return <div ref={container}>{isLoading && Loader ? Loader : children}</div>;
 };
