@@ -1,13 +1,15 @@
 import React, { useLayoutEffect, useRef, useState } from "react";
 
 export const Skeleton = ({
-  isLoading,
+  isLoading = true,
   maxDepth = Infinity,
+  minDepth = 0,
   children,
   ...props
 }: {
-  isLoading: boolean;
+  isLoading?: boolean;
   maxDepth?: number;
+  minDepth?: number;
   children: React.ReactNode;
 } & React.HTMLAttributes<HTMLDivElement>) => {
   const container = useRef<HTMLDivElement>(null);
@@ -39,7 +41,7 @@ export const Skeleton = ({
         parent = parent.parentNode;
       }
 
-      if (currentDepth > maxDepth) {
+      if (currentDepth > maxDepth || currentDepth < minDepth) {
         continue;
       }
 
@@ -66,16 +68,16 @@ export const Skeleton = ({
         <defs>
           <linearGradient
             id="logo-gradient"
-            x1="50%"
+            x1="0%"
             y1="0%"
-            x2="50%"
+            x2="100%"
             y2="100%"
           >
             <stop offset="0%" stop-color="#7A5FFF">
               <animate
                 attributeName="stop-color"
                 values="#7A5FFF; #01FF89; #7A5FFF"
-                dur="4s"
+                dur="2s"
                 repeatCount="indefinite"
               ></animate>
             </stop>
@@ -95,8 +97,8 @@ export const Skeleton = ({
           <rect
             x={node.boundingBox.left}
             y={node.boundingBox.top}
-            rx={10}
-            ry={10}
+            rx={15}
+            ry={15}
             width={node.boundingBox.width}
             height={node.boundingBox.height}
             fill="url('#logo-gradient')"
